@@ -33,6 +33,9 @@ export class ReportsService {
       _avg: {
         upvotes: true,
       },
+      _sum: {
+        upvotes: true,
+      },
       _max: {
         upvotes: true,
       },
@@ -44,6 +47,7 @@ export class ReportsService {
     return {
       averageUpvotesCount: result._avg.upvotes,
       biggestUpvotesCount: result._max.upvotes,
+      allUpvotesReceived: result._sum.upvotes,
       longestArticleLength,
       shortestArticleLength,
     };
