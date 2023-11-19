@@ -2,7 +2,8 @@
 CREATE TABLE "Article" (
     "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
-    "text" TEXT,
+    "content" TEXT,
+    "upvotes" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "Article_pkey" PRIMARY KEY ("id")
 );

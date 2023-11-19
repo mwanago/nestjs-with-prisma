@@ -5,7 +5,7 @@ export class UpdateArticleDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  text?: string;
+  content?: string;
 
   @IsString()
   @IsNotEmpty()

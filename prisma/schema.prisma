@@ -8,9 +8,10 @@ datasource db {
 }
 
 model Article {
-  id    Int     @id @default(autoincrement())
-  title String
-  text  String?
+  id      Int     @id @default(autoincrement())
+  title   String
+  content String?
+  upvotes Int     @default(0)
 }
 
 model User {
