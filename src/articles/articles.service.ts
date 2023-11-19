@@ -26,9 +26,12 @@ export class ArticlesService {
     return article;
   }
 
-  create(article: CreateArticleDto) {
+  create(article: CreateArticleDto, authorId: number) {
     return this.prismaService.article.create({
-      data: article,
+      data: {
+        ...article,
+        authorId,
+      },
     });
   }
 
