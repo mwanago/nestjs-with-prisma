@@ -28,6 +28,22 @@ export class ReportsService {
     };
   }
 
+  async getAuthorsStatistics() {
+    const results = await this.prismaService.article.groupBy({
+      by: 'authorId',
+      _sum: {
+        upvotes: true,
+      },
+    });
+
+    return results.map(({ authorId, _sum }) => {
+      return {
+        authorId,
+        allUpvotesReceived: _sum.upvotes,
+      };
+    });
+  }
+
   async getArticlesStatistics() {
     const result = await this.prismaService.article.aggregate({
       _avg: {
