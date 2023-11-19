@@ -40,6 +40,11 @@ export class ReportsService {
       _max: {
         upvotes: true,
       },
+      orderBy: {
+        _sum: {
+          upvotes: 'desc'
+        }
+      }
     });
 
     return results.map(({ authorId, _sum, _max, _avg }) => {
