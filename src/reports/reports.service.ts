@@ -34,12 +34,20 @@ export class ReportsService {
       _sum: {
         upvotes: true,
       },
+      _avg: {
+        upvotes: true,
+      },
+      _max: {
+        upvotes: true,
+      },
     });
 
-    return results.map(({ authorId, _sum }) => {
+    return results.map(({ authorId, _sum, _max, _avg }) => {
       return {
         authorId,
         allUpvotesReceived: _sum.upvotes,
+        averageUpvotesCount: _avg.upvotes,
+        biggestUpvotesCount: _max.upvotes,
       };
     });
   }
