@@ -40,11 +40,13 @@ export class ReportsService {
       _max: {
         upvotes: true,
       },
-      orderBy: {
-        _sum: {
-          upvotes: 'desc'
-        }
-      }
+      having: {
+        upvotes: {
+          _avg: {
+            gt: 10,
+          },
+        },
+      },
     });
 
     return results.map(({ authorId, _sum, _max, _avg }) => {
@@ -67,6 +69,11 @@ export class ReportsService {
       },
       _max: {
         upvotes: true,
+      },
+      where: {
+        upvotes: {
+          lt: 0,
+        },
       },
     });
 

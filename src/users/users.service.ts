@@ -17,6 +17,9 @@ export class UsersService {
       where: {
         email,
       },
+      include: {
+        address: true,
+      },
     });
     if (!user) {
       throw new NotFoundException();
@@ -30,6 +33,9 @@ export class UsersService {
       where: {
         id,
       },
+      include: {
+        address: true,
+      },
     });
     if (!user) {
       throw new NotFoundException();
@@ -41,7 +47,17 @@ export class UsersService {
   async create(user: UserDto) {
     try {
       return this.prismaService.user.create({
-        data: user,
+        data: {
+          name: user.name,
+          email: user.email,
+          password: user.password,
+          address: {
+            create: user.address,
+          },
+        },
+        include: {
+          address: true,
+        },
       });
     } catch (error) {
       if (
