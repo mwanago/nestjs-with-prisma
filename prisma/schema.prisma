@@ -12,7 +12,7 @@ model Article {
   title    String
   content  String?
   upvotes  Int     @default(0)
-  author   User    @relation(fields: [authorId], references: [id])
+  author   User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId Int
 }
 
