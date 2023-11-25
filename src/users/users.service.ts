@@ -46,7 +46,7 @@ export class UsersService {
 
   async create(user: UserDto) {
     try {
-      return this.prismaService.user.create({
+      return await this.prismaService.user.create({
         data: {
           name: user.name,
           email: user.email,
@@ -65,6 +65,34 @@ export class UsersService {
         error?.code === PrismaError.UniqueConstraintFailed
       ) {
         throw new ConflictException('User with that email already exists');
+      }
+      throw error;
+    }
+  }
+
+  async delete(userId: number) {
+    try {
+      return await this.prismaService.user.delete({
+        where: {
+          id: userId,
+        },
+      });
+    } catch (error) {
+      if (!(error instanceof Prisma.PrismaClientKnownRequestError)) {
+        throw error;
+      }
+      if (error.code === PrismaError.RecordDoesNotExist) {
+        throw new NotFoundException();
+      }
+      const affectedField = error.meta?.field_name;
+      if (
+        error.code === PrismaError.ForeignKeyConstraintFailed &&
+        typeof affectedField === 'string' &&
+        affectedField.toLowerCase().includes('article')
+      ) {
+        throw new ConflictException(
+          "Can't remove the user that is an author of some articles",
+        );
       }
       throw error;
     }
