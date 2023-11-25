@@ -62,7 +62,7 @@ export class UsersService {
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
-        error?.code === PrismaError.UniqueConstraintFailed
+        error?.code === PrismaError.UniqueConstraintViolated
       ) {
         throw new ConflictException('User with that email already exists');
       }
@@ -86,7 +86,7 @@ export class UsersService {
       }
       const affectedField = error.meta?.field_name;
       if (
-        error.code === PrismaError.ForeignKeyConstraintFailed &&
+        error.code === PrismaError.ForeignKeyConstraintViolated &&
         typeof affectedField === 'string' &&
         affectedField.toLowerCase().includes('article')
       ) {
