@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthenticationModule } from './authentication/authentication.module';
 import * as Joi from 'joi';
 import { ReportsModule } from './reports/reports.module';
+import { EventsModule } from './events/events.module';
 import { CategoriesModule } from './categories/categories.module';
 
 @Module({
@@ -12,6 +13,7 @@ import { CategoriesModule } from './categories/categories.module';
     AuthenticationModule,
     ReportsModule,
     CategoriesModule,
+    EventsModule,
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         DATABASE_URL: Joi.string().required(),
