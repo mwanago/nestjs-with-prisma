@@ -7,12 +7,24 @@ import { CreateEventDto } from './dto/create-event.dto';
 export class EventsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getAll() {
-    return this.prismaService.$queryRaw`SELECT id, name, "dateRange"::text FROM "Event"`;
+  getAll() {
+    return this.prismaService
+      .$queryRaw`SELECT id, name, "dateRange"::text FROM "Event"`;
   }
 
-  async create(eventData: CreateEventDto) {
-    const range = new Range(eventData.startDate, eventData.endDate, RANGE_LB_INC | RANGE_UB_INC);
+  search(date: string) {
+    return this.prismaService.$queryRaw`
+      SELECT id, name, "dateRange"::text FROM "Event"
+      WHERE "dateRange" @> ${date}::timestamptz
+    `;
+  }
+
+  create(eventData: CreateEventDto) {
+    const range = new Range(
+      eventData.startDate,
+      eventData.endDate,
+      RANGE_LB_INC | RANGE_UB_INC,
+    );
 
     return this.prismaService.$queryRaw`
       INSERT INTO "Event"(
@@ -25,5 +37,4 @@ export class EventsService {
       RETURNING id, name, "dateRange"::text
     `;
   }
-
 }

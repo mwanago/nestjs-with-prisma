@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { EventResponseDto } from './dto/event-response.dto';
 import { TransformPlainToInstance } from 'class-transformer';
+import { FindEventsParamsDto } from './dto/find-events-params.dto';
 
 @Controller('events')
 export class EventsController {
@@ -10,7 +11,10 @@ export class EventsController {
 
   @Get()
   @TransformPlainToInstance(EventResponseDto)
-  getAll() {
+  getAll(@Query() { date }: FindEventsParamsDto) {
+    if (date) {
+      return this.eventsService.search(date);
+    }
     return this.eventsService.getAll();
   }
 
