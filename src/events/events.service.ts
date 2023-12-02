@@ -8,8 +8,9 @@ export class EventsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   getAll() {
-    return this.prismaService
-      .$queryRaw`SELECT id, name, "dateRange"::text FROM "Event"`;
+    return this.prismaService.$queryRaw`
+      SELECT id, name, "dateRange"::text FROM "Event"
+    `;
   }
 
   search(date: string) {
