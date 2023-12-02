@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { Range, RANGE_LB_INC, RANGE_UB_INC, serialize } from 'postgres-range';
 import { CreateEventDto } from './dto/create-event.dto';
@@ -20,14 +20,14 @@ export class EventsService {
     `;
   }
 
-  create(eventData: CreateEventDto) {
+  async create(eventData: CreateEventDto) {
     const range = new Range(
       eventData.startDate,
       eventData.endDate,
       RANGE_LB_INC | RANGE_UB_INC,
     );
 
-    return this.prismaService.$queryRaw`
+    const queryResponse = await this.prismaService.$queryRaw`
       INSERT INTO "Event"(
         name, "dateRange"  
       )
@@ -37,5 +37,9 @@ export class EventsService {
       )
       RETURNING id, name, "dateRange"::text
     `;
+    if (Array.isArray(queryResponse) && queryResponse.length === 1) {
+      return queryResponse[0];
+    }
+    throw new InternalServerErrorException();
   }
 }
