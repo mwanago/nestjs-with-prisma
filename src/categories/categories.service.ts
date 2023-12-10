@@ -45,6 +45,9 @@ export class CategoriesService {
             connect: nestedCategories,
           },
         },
+        include: {
+          nestedCategories: true,
+        },
       });
     } catch (error) {
       if (
@@ -71,6 +74,9 @@ export class CategoriesService {
           nestedCategories: {
             connect: nestedCategories,
           },
+        },
+        include: {
+          nestedCategories: true,
         },
         where: {
           id,
