@@ -17,6 +17,19 @@ export class CategoriesService {
     return this.prismaService.category.findMany();
   }
 
+  private includeNestedCategories(
+    maximumLevel: number,
+  ): boolean | Prisma.Category$nestedCategoriesArgs {
+    if (maximumLevel === 1) {
+      return true;
+    }
+    return {
+      include: {
+        nestedCategories: this.includeNestedCategories(maximumLevel - 1),
+      },
+    };
+  }
+
   async getById(id: number) {
     const category = await this.prismaService.category.findUnique({
       where: {
@@ -24,6 +37,7 @@ export class CategoriesService {
       },
       include: {
         articles: true,
+        nestedCategories: this.includeNestedCategories(10),
       },
     });
     if (!category) {
