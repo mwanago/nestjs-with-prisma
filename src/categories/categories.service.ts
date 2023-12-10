@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { Prisma } from '@prisma/client';
@@ -28,30 +32,61 @@ export class CategoriesService {
     return category;
   }
 
-  create(category: CreateCategoryDto) {
-    return this.prismaService.category.create({
-      data: {
-        name: category.name,
-      },
-    });
+  async create(category: CreateCategoryDto) {
+    const nestedCategories =
+      category.nestedCategoryIds?.map((id) => ({
+        id,
+      })) || [];
+    try {
+      return await this.prismaService.category.create({
+        data: {
+          name: category.name,
+          nestedCategories: {
+            connect: nestedCategories,
+          },
+        },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === PrismaError.ConnectedRecordsNotFound
+      ) {
+        throw new ConflictException(
+          'Some of the provided category ids are not valid',
+        );
+      }
+      throw error;
+    }
   }
 
   async update(id: number, category: UpdateCategoryDto) {
     try {
+      const nestedCategories =
+        category.nestedCategoryIds?.map((id) => ({
+          id,
+        })) || [];
       return await this.prismaService.category.update({
         data: {
           name: category.name,
+          nestedCategories: {
+            connect: nestedCategories,
+          },
         },
         where: {
           id,
         },
       });
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === PrismaError.RecordDoesNotExist
-      ) {
+      if (!(error instanceof Prisma.PrismaClientKnownRequestError)) {
+        throw error;
+      }
+      if (error.code === PrismaError.RecordDoesNotExist) {
         throw new NotFoundException();
+      }
+      if (error.code === PrismaError.ConnectedRecordsNotFound) {
+        throw new ConflictException(
+          'Some of the provided category ids are not valid',
+        );
       }
       throw error;
     }
