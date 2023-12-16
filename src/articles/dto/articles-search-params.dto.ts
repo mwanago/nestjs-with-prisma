@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class ArticleSearchParamsDto {
+export class ArticlesSearchParamsDto {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
