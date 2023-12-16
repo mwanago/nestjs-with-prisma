@@ -15,6 +15,7 @@ export class ArticlesService {
       where: {
         content: {
           contains: query,
+          mode: 'insensitive',
         },
       },
     });
