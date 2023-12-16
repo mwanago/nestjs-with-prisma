@@ -16,4 +16,9 @@ export class ArticlesSearchParamsDto {
   @IsNotEmpty()
   @IsString()
   categoryName?: string | null;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  authorNameToAvoid?: string;
 }

@@ -15,8 +15,19 @@ export class ArticlesService {
     textSearch,
     upvotesGreaterThan,
     categoryName,
+    authorNameToAvoid,
   }: ArticlesSearchParamsDto) {
     const searchInputs: Prisma.ArticleWhereInput[] = [];
+
+    if (authorNameToAvoid) {
+      searchInputs.push({
+        NOT: {
+          author: {
+            name: authorNameToAvoid,
+          },
+        },
+      });
+    }
 
     if (categoryName) {
       searchInputs.push({
