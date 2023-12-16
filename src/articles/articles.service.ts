@@ -11,8 +11,22 @@ import { ArticlesSearchParamsDto } from './dto/articles-search-params.dto';
 export class ArticlesService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  search({ textSearch, upvotesGreaterThan }: ArticlesSearchParamsDto) {
+  search({
+    textSearch,
+    upvotesGreaterThan,
+    categoryName,
+  }: ArticlesSearchParamsDto) {
     const searchInputs: Prisma.ArticleWhereInput[] = [];
+
+    if (categoryName) {
+      searchInputs.push({
+        categories: {
+          some: {
+            name: categoryName,
+          },
+        },
+      });
+    }
 
     if (textSearch) {
       searchInputs.push({

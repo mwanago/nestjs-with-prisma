@@ -11,4 +11,9 @@ export class ArticlesSearchParamsDto {
   @IsOptional()
   @IsNumber()
   upvotesGreaterThan?: number | null;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  categoryName?: string | null;
 }
