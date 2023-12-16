@@ -10,6 +10,16 @@ import { UpdateArticleDto } from './dto/update-article.dto';
 export class ArticlesService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  searchByText(query: string) {
+    return this.prismaService.article.findMany({
+      where: {
+        content: {
+          contains: query,
+        },
+      },
+    });
+  }
+
   getAll() {
     return this.prismaService.article.findMany();
   }

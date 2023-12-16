@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -15,13 +16,17 @@ import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { JwtAuthenticationGuard } from '../authentication/jwt-authentication.guard';
 import { RequestWithUser } from '../authentication/request-with-user.interface';
+import { ArticleSearchParamsDto } from './dto/article-search-params.dto';
 
 @Controller('articles')
 export default class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
   @Get()
-  getAll() {
+  getAll(@Query() { textSearch }: ArticleSearchParamsDto) {
+    if (textSearch) {
+      return this.articlesService.searchByText(textSearch);
+    }
     return this.articlesService.getAll();
   }
 
