@@ -23,11 +23,8 @@ export default class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
   @Get()
-  getAll(@Query() { textSearch }: ArticlesSearchParamsDto) {
-    if (textSearch) {
-      return this.articlesService.searchByText(textSearch);
-    }
-    return this.articlesService.getAll();
+  getAll(@Query() searchParams: ArticlesSearchParamsDto) {
+    return this.articlesService.search(searchParams);
   }
 
   @Get(':id')

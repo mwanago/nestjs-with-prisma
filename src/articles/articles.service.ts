@@ -5,28 +5,55 @@ import { Prisma } from '@prisma/client';
 import { PrismaError } from '../database/prisma-error.enum';
 import { ArticleNotFoundException } from './article-not-found.exception';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { ArticlesSearchParamsDto } from './dto/articles-search-params.dto';
 
 @Injectable()
 export class ArticlesService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  searchByText(query: string) {
-    return this.prismaService.article.findMany({
-      where: {
+  search({ textSearch, upvotesGreaterThan }: ArticlesSearchParamsDto) {
+    const searchInputs: Prisma.ArticleWhereInput[] = [];
+
+    if (textSearch) {
+      searchInputs.push({
         OR: [
           {
             content: {
-              contains: query,
+              contains: textSearch,
               mode: 'insensitive',
             },
           },
           {
             title: {
-              contains: query,
+              contains: textSearch,
               mode: 'insensitive',
             },
           },
         ],
+      });
+    }
+
+    if (typeof upvotesGreaterThan === 'number') {
+      searchInputs.push({
+        upvotes: {
+          gt: upvotesGreaterThan,
+        },
+      });
+    }
+
+    if (!searchInputs.length) {
+      return this.getAll();
+    }
+
+    if (searchInputs.length === 1) {
+      return this.prismaService.article.findMany({
+        where: searchInputs[0],
+      });
+    }
+
+    return this.prismaService.article.findMany({
+      where: {
+        AND: searchInputs,
       },
     });
   }
