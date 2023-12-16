@@ -13,10 +13,20 @@ export class ArticlesService {
   searchByText(query: string) {
     return this.prismaService.article.findMany({
       where: {
-        content: {
-          contains: query,
-          mode: 'insensitive',
-        },
+        OR: [
+          {
+            content: {
+              contains: query,
+              mode: 'insensitive',
+            },
+          },
+          {
+            title: {
+              contains: query,
+              mode: 'insensitive',
+            },
+          },
+        ],
       },
     });
   }
