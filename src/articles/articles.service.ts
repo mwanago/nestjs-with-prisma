@@ -84,13 +84,20 @@ export class ArticlesService {
   }
 
   getAll() {
-    return this.prismaService.article.findMany();
+    return this.prismaService.article.findMany({
+      include: {
+        author: true,
+      },
+    });
   }
 
   async getById(id: number) {
     const article = await this.prismaService.article.findUnique({
       where: {
         id,
+      },
+      include: {
+        author: true,
       },
     });
     if (!article) {

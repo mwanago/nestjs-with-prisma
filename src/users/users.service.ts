@@ -13,6 +13,20 @@ export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getByEmail(email: string) {
+    const countriesWithFirstUser = await this.prismaService.address.findMany({
+      include: {
+        user: true,
+      },
+      distinct: ['country'],
+      orderBy: {
+        user: {
+          id: 'asc',
+        },
+      },
+    });
+
+    console.log('countriesWithFirstUser', countriesWithFirstUser);
+
     const user = await this.prismaService.user.findUnique({
       where: {
         email,
