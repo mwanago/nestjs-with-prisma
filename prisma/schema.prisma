@@ -17,8 +17,9 @@ model Category {
 }
 
 model Photo {
-  id       Int    @id @default(autoincrement())
+  id       Int       @id @default(autoincrement())
   imageUrl String
+  comments Comment[]
 }
 
 model Article {
@@ -29,6 +30,19 @@ model Article {
   author     User       @relation(fields: [authorId], references: [id], onDelete: Restrict)
   authorId   Int
   categories Category[]
+  comments   Comment[]
+}
+
+model Comment {
+  id Int @id @default(autoincrement())
+
+  content String
+
+  photo   Photo? @relation(fields: [photoId], references: [id])
+  photoId Int?
+
+  article   Article? @relation(fields: [articleId], references: [id])
+  articleId Int?
 }
 
 model Address {
