@@ -14,7 +14,9 @@ export function ContainsValidForeignKeys() {
       target: object.constructor,
       propertyName: propertyName,
       options: {
-        message: `You need to provide exactly one of the following properties: ${idKeys.join(', ',)}`,
+        message: `You need to provide exactly one of the following properties: ${idKeys.join(
+          ', ',
+        )}`,
       },
       validator: {
         validate(value: unknown, validationArguments: ValidationArguments) {
