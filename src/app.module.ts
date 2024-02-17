@@ -6,6 +6,7 @@ import * as Joi from 'joi';
 import { ReportsModule } from './reports/reports.module';
 import { EventsModule } from './events/events.module';
 import { CategoriesModule } from './categories/categories.module';
+import { PhotosModule } from './photos/photos.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { CategoriesModule } from './categories/categories.module';
     ReportsModule,
     CategoriesModule,
     EventsModule,
+    PhotosModule,
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         DATABASE_URL: Joi.string().required(),

@@ -16,6 +16,11 @@ model Category {
   parentCategoryId Int?
 }
 
+model Photo {
+  id       Int    @id @default(autoincrement())
+  imageUrl String
+}
+
 model Article {
   id         Int        @id @default(autoincrement())
   title      String
